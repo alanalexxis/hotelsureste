@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Gilda+Display&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  html {
+    @apply scroll-smooth scroll-pt-6;
+  }
+
+  /* 
+  🟨🟨🟨🟨🟨🟨🟨🟨🟨
+  Browser Main Scrollbar 
+  🟨🟨🟨🟨🟨🟨🟨🟨🟨
+  */
+
+  html::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    border-radius   : 2px;
+    background-color: #a37d4c;
+  }
+
+  html::-webkit-scrollbar-track {
+    background-color: #FFFFFF;
+  }
+
+  body {
+    @apply font-secondary text-primary;
+  }
+
+  input::placeholder {
+    @apply text-primary;
+  }
+
+  .h2 {
+    @apply font-primary text-[45px] mb-4;
+  }
+
+  .h3 {
+    @apply text-2xl font-primary font-semibold tracking-[1px] mb-2;
+  }
+
+  .btn {
+    @apply text-[15px] tracking-[3px] font-tertiary uppercase text-white flex-1 transition-all px-8 flex justify-center items-center;
+  }
+
+  .btn-sm {
+    @apply h-[48px];
+  }
+
+  .btn-lg {
+    @apply h-[60px];
+  }
+
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover;
+  }
+
+  .btn-secondary {
+    @apply bg-primary hover:bg-accent;
+  }
+
+  .btn-white {
+    @apply bg-white text-[#0a0a0a];
+  }
+}
+input.defaultCheckbox::before {
+	content: url(../assets/svg/checked.svg); 
+	color: white;
+	opacity: 0; 
+	height: 16px; 
+	width: 16px;
+	position: absolute; 
+	left: 50%;
+	transform: translate(-50%, 0px);
+} 
+
+input:checked.defaultCheckbox::before { 
+	opacity: 1;
+}
+.front-card {
+  position: absolute;
+  top: 180px;
+  background: url("../views/admin/tarjeta/components/images/bg-card-front.png") no-repeat center/cover;
+  height: 230px;
+  width: 320px;
+  border-radius: 10px;
+  z-index: 20;
+}
+
+.back-card {
+  position: absolute;
+  right: 20px;
+  background: url("../views/admin/tarjeta/components/images/bg-card-back.png") no-repeat center/cover;
+  height: 230px;
+  width: 320px;
+  border-radius: 10px;
+}
+
+
+.back-card p {
+  top: 6.15rem;
+}
+
+form,
+.thank-you {
+  margin-top: 350px;
+}
+
+form label {
+  @apply block uppercase tracking-wider text-navy-800 mb-2 text-sm;
+}
+
+form input {
+  @apply border-2 border-navy-300 py-3 px-4 rounded outline-none w-full;
+}
+
+.btnn {
+  background-color: hsl(278, 68%, 11%);
+  @apply py-3 px-6 rounded shadow text-white text-base tracking-wide lg:text-lg;
+}
+
+@media (min-width: 768px) {
+  .front-card,
+  .back-card {
+    height: 300px;
+    width: 500px;
+    border-radius: 20px;
+  }
+
+  .back-card p {
+    top: 8.3rem;
+  }
+
+  form,
+  .thank-you {
+    margin-top: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .front-card,
+  .back-card {
+    position: relative;
+  }
+
+  .front-card {
+    top: -50px;
+  }
+
+  .back-card {
+    top: -30px;
+    right: 60px;
+  }
+
+  form,
+  .thank-you {
+    margin-top: 0;
+  }
+}
+
