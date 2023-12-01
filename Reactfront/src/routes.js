@@ -1,19 +1,13 @@
 import React from "react";
-
-// Admin Imports
 import MainDashboard from "./views/admin/default";
-
 import Profile from "./views/admin/profile";
 import DataTables from "./views/admin/usuario";
-
 import TablaTarjeta from "./views/admin/tarjeta";
-
-
 import { TbDoorEnter, TbDoorExit } from "react-icons/tb";
 
 // Auth Imports
 import SignIn from "./views/auth/SignIn";
-import { FaCreditCard } from 'react-icons/fa';
+import { FaCreditCard } from "react-icons/fa";
 // Icon Imports
 import {
   MdHome,
@@ -21,16 +15,13 @@ import {
   MdBarChart,
   MdPerson,
   MdLock,
-
   MdInventory,
-
 } from "react-icons/md";
 
 import RouteController from "./routes/RouteController";
 import TablaAviso from "./views/admin/aviso";
 import CompEditUsuario from "./views/admin/usuario/components/usuario/EditUsuario";
 import CompCreateUsuario from "./views/admin/usuario/components/usuario/CreateUsuario";
-import CompCreateContacto from "./views/admin/contacto/components/createContacto";
 import TablaContactos from "./views/admin/contacto/index2";
 
 const routes = [
@@ -48,7 +39,7 @@ const routes = [
     name: "Usuarios",
     layout: "/admin",
     icon: <MdSupervisedUserCircle className="h-6 w-6" />,
-    path: "data-tables",
+    path: "usuarios",
     component: <DataTables />,
   },
 
@@ -67,9 +58,6 @@ const routes = [
     component: <TablaAviso />,
   },
 
-  
-
-
   {
     name: "Editar usuarios",
     layout: "/admin",
@@ -86,15 +74,6 @@ const routes = [
     component: <CompCreateUsuario />,
   },
 
-
-  {
-    name: "Contáctanos",
-    layout: "/admin",
-    icon: <MdBarChart className="h-6 w-6" />,
-    path: "contactanos",
-    component: <CompCreateContacto />,
-  },
-
   {
     name: "Mis mensajes",
     layout: "/admin",
@@ -103,7 +82,6 @@ const routes = [
     component: <TablaContactos />,
   },
 
-
   // {
   //   name: "Añadir grupos",
   //   layout: "/admin",
@@ -111,7 +89,6 @@ const routes = [
   //   path: "grupo/create",
   //   component: <CompCreateGrupo />,
   // },
-
 
   {
     name: "Perfil",

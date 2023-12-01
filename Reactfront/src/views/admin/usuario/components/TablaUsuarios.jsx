@@ -14,7 +14,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 const ColumnsTable = (props) => {
   const [showPasswords, setShowPasswords] = useState(false);
   const [visiblePasswords, setVisiblePasswords] = useState([]);
-
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
   // Función para alternar la visibilidad de las contraseñas
   // Función para alternar la visibilidad de la contraseña de un usuario específico
   const handleTogglePassword = (userId) => {
@@ -49,7 +49,8 @@ const ColumnsTable = (props) => {
 
   const handleDeleteClick = (idusuarios) => {
     setIdUsuariosToDelete(idusuarios);
-    setOpen(true);
+    setDeleteTargetId(idusuarios);
+    setOpen(true); // Ensure modal is opened
   };
 
   const URI = process.env.REACT_APP_API_BACKEND + "usuarios/";
@@ -142,7 +143,7 @@ const ColumnsTable = (props) => {
                   >
                     <FaTrash className="text-red-200 hover:text-red-600" />
                   </button>
-                  {open && (
+                  {open && deleteTargetId === usuario.idusuarios && (
                     <Transition.Root show={open} as={Fragment}>
                       <Dialog
                         as="div"

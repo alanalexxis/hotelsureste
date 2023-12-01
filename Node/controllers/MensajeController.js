@@ -3,19 +3,15 @@ import mensajeModel from "../models/MensajeModel.js";
 
 export const getAllMensajes = async (req, res) => {
   try {
-    const mensajes = await mensajeModel.findAll({
-    
-    });
+    const mensajes = await mensajeModel.findAll({});
     res.json(
       mensajes.map((mensaje) => ({
         idmensajes: mensaje.idmensajes,
-      
         nombre: mensaje.nombre,
         telefono: mensaje.telefono,
-     
+        correo: mensaje.correo,
         mensaje: mensaje.mensaje,
         genero: mensaje.genero,
-       
       }))
     );
   } catch (error) {
@@ -78,5 +74,3 @@ export const deleteMensaje = async (req, res) => {
     res.json({ message: error.message });
   }
 };
-
-

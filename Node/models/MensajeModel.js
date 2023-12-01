@@ -14,7 +14,7 @@ const mensajeModel = db.define("mensaje", {
 
   nombre: { type: DataTypes.STRING },
   telefono: { type: DataTypes.STRING },
-
+  correo: { type: DataTypes.STRING },
   mensaje: { type: DataTypes.STRING },
   genero: { type: DataTypes.STRING },
 });
