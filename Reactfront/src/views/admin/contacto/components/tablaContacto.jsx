@@ -1,6 +1,7 @@
 import CardMenu from "../../../../components/card/CardMenu";
 import Card from "../../../../components/card";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -98,6 +99,7 @@ const TablaContacto = (props) => {
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      window.location.hash = `#${currentPage - 1}`;
     }
   };
 
@@ -106,6 +108,7 @@ const TablaContacto = (props) => {
     const totalPages = Math.ceil(mensajes.length / recordsPerPage);
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      window.location.hash = `#${currentPage + 1}`;
     }
   };
   // Function to generate an array with page numbers for rendering
@@ -148,6 +151,14 @@ const TablaContacto = (props) => {
       return pageNumbers;
     }
   };
+  React.useEffect(() => {
+    const totalPages = Math.max(Math.ceil(mensajes.length / recordsPerPage), 1);
+
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+      window.location.hash = `#${currentPage - 1}`;
+    }
+  }, [mensajes, recordsPerPage, currentPage, setCurrentPage]);
 
   const URI = process.env.REACT_APP_API_BACKEND + "mensajes/";
 
@@ -389,15 +400,15 @@ const TablaContacto = (props) => {
 
         <button
           onClick={goToNextPage}
-          disabled={currentPage === Math.ceil(mensajes.length / recordsPerPage)}
-          className={`flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize transition-colors duration-200 ${
+          disabled={
+            mensajes.length === 0 ||
             currentPage === Math.ceil(mensajes.length / recordsPerPage)
-              ? "cursor-not-allowed text-gray-400"
-              : "text-gray-700"
-          } ${
-            currentPage === Math.ceil(mensajes.length / recordsPerPage)
-              ? "bg-gray-100"
-              : "bg-white hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+          }
+          className={`flex items-center gap-x-2 rounded-md border px-5 py-2 text-sm capitalize transition-colors duration-200 ${
+            currentPage === Math.ceil(mensajes.length / recordsPerPage) ||
+            mensajes.length === 0
+              ? "cursor-not-allowed text-gray-400 bg-gray-100"
+              : "text-gray-700 bg-white hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
           }`}
         >
           <span>Siguiente</span>
