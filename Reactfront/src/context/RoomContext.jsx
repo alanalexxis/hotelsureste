@@ -8,7 +8,7 @@ export const RoomContext = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const [adults, setAdults] = useState("1 Adulto");
-  const [kids, setKids] = useState("0 Kid");
+  const [kids, setKids] = useState("0 Niños");
   const [total, setTotal] = useState(0);
 
   useEffect(() => {

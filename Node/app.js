@@ -9,10 +9,9 @@ import db from "./database/db.js";
 import sharp from "sharp";
 //importamos nuestro enrutador
 import UsuarioRoutes from "./routes/routesUsuario.js";
-import MensajeRoutes from "./routes/routesMensaje.js"
-
+import MensajeRoutes from "./routes/routesMensaje.js";
+import ReservacionRoutes from "./routes/routesReservacion.js";
 import usuarioModel from "./models/UsuarioModel.js";
-
 
 const app = express();
 
@@ -21,6 +20,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/usuarios", UsuarioRoutes);
 app.use("/mensajes", MensajeRoutes);
+app.use("/reservacions", ReservacionRoutes);
 try {
   await db.authenticate();
   console.log("Base de datos conectada");
@@ -39,8 +39,11 @@ app.post("/api/login", (req, res) => {
     .then(async (usuario) => {
       if (usuario) {
         // Compara la contraseña proporcionada con la contraseña almacenada usando bcrypt.compare
-        const passwordMatch = await bcrypt.compare(contrasena, usuario.contrasena);
-        
+        const passwordMatch = await bcrypt.compare(
+          contrasena,
+          usuario.contrasena
+        );
+
         if (passwordMatch) {
           const response = {
             usuario: usuario,
