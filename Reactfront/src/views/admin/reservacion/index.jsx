@@ -1,10 +1,10 @@
-import TablaContactos from "./components/tablaContacto";
+import TablaReservaciones from "./components/tablaReservacion";
 
-const TablaContacto = () => {
+const TablaReservacion = () => {
   return (
     <div className="min-h-screen pb-[60px]">
       <div className="xl-xgrid mt-5 h-full grid-cols-1 gap-5 xl:grid-cols-2">
-        <TablaContactos />
+        <TablaReservaciones />
 
         <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2"></div>
       </div>
@@ -12,4 +12,4 @@ const TablaContacto = () => {
   );
 };
 
-export default TablaContacto;
+export default TablaReservacion;

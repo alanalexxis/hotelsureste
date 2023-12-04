@@ -23,6 +23,7 @@ import TablaAviso from "./views/admin/aviso";
 import CompEditUsuario from "./views/admin/usuario/components/usuario/EditUsuario";
 import CompCreateUsuario from "./views/admin/usuario/components/usuario/CreateUsuario";
 import TablaContactos from "./views/admin/contacto/index2";
+import TablaReservacion from "./views/admin/reservacion/index";
 
 const routes = [
   {
@@ -80,6 +81,13 @@ const routes = [
     icon: <MdBarChart className="h-6 w-6" />,
     path: "mensajes",
     component: <TablaContactos />,
+  },
+  {
+    name: "Mis reservas",
+    layout: "/admin",
+    icon: <MdBarChart className="h-6 w-6" />,
+    path: "reservas",
+    component: <TablaReservacion />,
   },
 
   // {
