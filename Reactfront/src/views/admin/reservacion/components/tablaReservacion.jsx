@@ -44,7 +44,7 @@ const TablaReservaciones = (props) => {
   };
 
   const handleDeleteClick = (idreservacions) => {
-    setIdMensajesToDelete(idreservacions);
+    setIdReservacionsToDelete(idreservacions);
     setDeleteTargetId(idreservacions);
     setOpen(true); // Ensure modal is opened
   };

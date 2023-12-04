@@ -10,6 +10,7 @@ import sharp from "sharp";
 //importamos nuestro enrutador
 import UsuarioRoutes from "./routes/routesUsuario.js";
 import MensajeRoutes from "./routes/routesMensaje.js";
+import HabitacionRoutes from "./routes/routesHabitacion.js";
 import ReservacionRoutes from "./routes/routesReservacion.js";
 import usuarioModel from "./models/UsuarioModel.js";
 
@@ -21,6 +22,7 @@ app.use(express.static("public"));
 app.use("/usuarios", UsuarioRoutes);
 app.use("/mensajes", MensajeRoutes);
 app.use("/reservacions", ReservacionRoutes);
+app.use("/habitacions", HabitacionRoutes);
 try {
   await db.authenticate();
   console.log("Base de datos conectada");
