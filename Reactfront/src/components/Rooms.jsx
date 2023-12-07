@@ -88,7 +88,7 @@ const Rooms = () => {
         // Desaparecerá después de 3 segundos
         setTimeout(() => {
           setModalIsOpen(false);
-        }, 3000);
+        }, 6000);
 
         // Puedes agregar lógica adicional aquí si es necesario
       } catch (error) {
@@ -110,6 +110,25 @@ const Rooms = () => {
     // Limitar a 200 caracteres
     const limitedValue = inputValue.substring(0, 200);
     setMensaje(limitedValue);
+  };
+  const handleNombreChange = (e) => {
+    const inputValue = e.target.value;
+    // Limitar a 200 caracteres
+    const limitedValue = inputValue.substring(0, 45);
+    setNombre(limitedValue);
+  };
+
+  const handleCorreoChange = (e) => {
+    const inputValue = e.target.value;
+    // Limitar a 200 caracteres
+    const limitedValue = inputValue.substring(0, 45);
+    setCorreo(limitedValue);
+  };
+  const handleTelefonoChange = (e) => {
+    const inputValue = e.target.value;
+    // Limitar a 200 caracteres
+    const limitedValue = inputValue.substring(0, 14);
+    setTelefono(limitedValue);
   };
 
   return (
@@ -160,7 +179,7 @@ const Rooms = () => {
               <input
                 class="w-full bg-gray-100 text-gray-900 mt-2 p-3 rounded-lg focus:outline-none focus:shadow-outline"
                 value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                onChange={handleNombreChange}
                 type="text"
                 placeholder="Nombre completo*"
                 pattern="[A-Za-z]+"
@@ -182,13 +201,13 @@ const Rooms = () => {
                 type="email"
                 placeholder="Correo*"
                 value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
+                onChange={handleCorreoChange}
               />
               <input
                 class="w-full bg-gray-100 text-gray-900 mt-2 p-3 rounded-lg focus:outline-none focus:shadow-outline"
                 placeholder="Teléfono*"
                 value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
+                onChange={handleTelefonoChange}
                 type="text"
                 pattern="[0-9+]*"
               />

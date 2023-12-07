@@ -6,25 +6,29 @@ import "../../src/style/datepicker.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BsChevronDown } from "react-icons/bs";
-
+import { Link } from "react-router-dom";
 import { ScrollToTop, Header, Footer } from "../components";
 import roomVid from "../assets/room.mp4";
 import { useRoomContext } from "../context/RoomContext";
 import { hotelRules } from "../constants/data";
 import { useParams } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
-
+import Modal from "react-modal";
+import { MdError } from "react-icons/md";
+import { MdDone } from "react-icons/md"; // Importa el icono de "Hecho" de react-icons/md
 const RoomDetails = () => {
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const data = JSON.parse(localStorage.getItem("legedin"));
   const Userdata = localStorage.getItem("legedin")
     ? JSON.parse(localStorage.getItem("legedin"))
     : null;
   const [startDate, setStartDate] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [endDate, setEndDate] = useState(false);
   const { id } = useParams(); // id get form url (/room/:id) as string...
   const { rooms } = useRoomContext();
-
+  const [total, setTotal] = useState(0); // Declare total state
   const room = rooms.find((room) => room.id === +id);
 
   for (const key in room) {
@@ -41,7 +45,13 @@ const RoomDetails = () => {
         1,
         Math.floor((endDate - startDate) / (24 * 60 * 60 * 1000))
       );
-      return days * (price || 0); // Multiplicar por el precio, asegurándote de manejar casos donde el precio sea null o undefined
+
+      // Check if the value to be set is different from the current state
+      if (days * (price || 0) !== total) {
+        setTotal(days * (price || 0));
+      }
+
+      return days * (price || 0);
     }
     return 0;
   };
@@ -69,11 +79,44 @@ const RoomDetails = () => {
   const store = async (e) => {
     e.preventDefault();
 
-    await axios.post(URI, {
-      idstatuses: 1,
-      idhabitacions: id,
-      idusuarios: data.usuario.idusuarios,
-    });
+    if (!startDate) {
+      setError("Seleccione una fecha de llegada.");
+      // Desaparecerá después de 3 segundos
+      setTimeout(() => {
+        setError("");
+      }, 6000);
+    } else if (!endDate) {
+      setError("Seleccione una fecha de salida");
+      setTimeout(() => {
+        setError("");
+      }, 6000);
+    } else if (!data.usuario.numTarjeta) {
+      setError(
+        "Para continuar, primero necesitas agregar una tarjeta de crédito o débito."
+      );
+
+      setModalIsOpen(true);
+
+      // Desaparecerá después de 3 segundos
+      setTimeout(() => {
+        setModalIsOpen(false);
+      }, 6000);
+    } else {
+      await axios.post(URI, {
+        idstatuses: 1,
+        idhabitacions: id,
+        idusuarios: data.usuario.idusuarios,
+        fecInic: startDate,
+        fecFin: endDate,
+        total: total,
+      });
+      setModalIsOpen(true);
+
+      // Desaparecerá después de 3 segundos
+      setTimeout(() => {
+        setModalIsOpen(false);
+      }, 6000);
+    }
   };
   const URI = process.env.REACT_APP_API_BACKEND + "reservacions/";
   return (
@@ -130,6 +173,26 @@ const RoomDetails = () => {
 
           {/* ➡️➡️➡️ right side ➡️➡️➡️ */}
           <div className="w-full lg:w-[40%] h-full">
+            {!startDate && error && (
+              <p className="mt-2 rounded border border-red-400 bg-red-100 px-4 py-2 text-red-500">
+                {error}
+              </p>
+            )}
+            {!endDate && startDate && error && (
+              <p className="mt-2 rounded border border-red-400 bg-red-100 px-4 py-2 text-red-500">
+                {error}
+              </p>
+            )}
+
+            {startDate && endDate && error && !data.usuario.numTarjeta && (
+              <p className="mt-2 rounded border border-red-400 bg-red-100 px-4 py-2 text-red-500">
+                {error}{" "}
+                <Link to="/usuario/tarjeta" className="underline text-blue-500">
+                  Click aquí para agregar un método de pago.
+                </Link>
+              </p>
+            )}
+
             {/* reservation */}
             <div className="py-8 px-6 bg-accent/20 mb-12">
               <div className="flex flex-col space-y-4 mb-4">
@@ -143,9 +206,16 @@ const RoomDetails = () => {
                     </span>
                   </p>
                 ) : (
-                  <p className="text-sm font-bold text-navy-700 dark:text-white bg-white p-4 rounded-md shadow-md text-center">
-                    {/* Mensaje para usuario desconocido */}
-                    👋 Hey, usuario desconocido
+                  <p className="text-lg font-bold text-navy-700 dark:text-white bg-white p-4 rounded-md shadow-md text-center">
+                    {/* Saludo */}
+                    <span className="block">👋 Hola, te estamos esperando</span>
+                    {/* Nombre del usuario */}
+                    <span className="block text-accent mt-2">
+                      <Link to="/auth/sign-in">
+                        {" "}
+                        Inicia sesión para continuar.
+                      </Link>
+                    </span>
                   </p>
                 )}
                 <div className="h-[60px]">
@@ -175,6 +245,7 @@ const RoomDetails = () => {
                       selected={startDate}
                       placeholderText="Fecha de llegada"
                       onChange={handleStartDateChange}
+                      minDate={new Date()} // Set minDate to today
                     />
                   </div>
                 </div>
@@ -203,10 +274,18 @@ const RoomDetails = () => {
                   </div>
                 </div>
               </div>
-
-              <button className="btn btn-lg btn-primary w-full" onClick={store}>
-                Reservar ahora por ${calculateTotalPrice()}
-              </button>
+              {data && data.usuario ? (
+                <button
+                  className="btn btn-lg btn-primary w-full"
+                  onClick={store}
+                >
+                  Reservar ahora por ${calculateTotalPrice()}
+                </button>
+              ) : (
+                <button className="btn btn-lg btn-primary w-full">
+                  <Link to="/auth/sign-in"> Inicia sesión para reservar.</Link>
+                </button>
+              )}
             </div>
 
             <div>
@@ -231,6 +310,64 @@ const RoomDetails = () => {
         </div>
       </div>
       <Footer />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        contentLabel="Mensaje Enviado Modal"
+        className="Modal  fixed z-50"
+        overlayClassName="Overlay"
+      >
+        {/* Contenido del modal */}
+        <div className="bg-white p-8 rounded-md shadow-md">
+          <div className="flex items-center justify-center mb-4">
+            {data && data.usuario && data.usuario.numTarjeta ? (
+              <MdDone size={48} color="#4CAF50" />
+            ) : (
+              <MdError size={48} color="#FF0000" />
+            )}
+            <div className="ml-2">
+              {data && data.usuario && data.usuario.numTarjeta ? (
+                <p className="font-bold text-xl text-green-600">
+                  ¡Habitación reservada con éxito!
+                </p>
+              ) : (
+                <p className="font-bold text-xl text-red-600">
+                  ¡Ha ocurrido un error!
+                </p>
+              )}
+            </div>
+          </div>
+          {data && data.usuario && data.usuario.numTarjeta ? (
+            <p className="text-gray-700">
+              ¡Gracias por tu reservar con nostros! Hemos recibido la
+              información de tu reserva correctamente, podrás consultar el
+              status en "Mis reservas".
+            </p>
+          ) : (
+            <p className="text-gray-700">
+              ¡Vaya, parece que aún no has configurado un método de pago! Para
+              continuar, por favor agrega una tarjeta de crédito o débito.
+            </p>
+          )}
+          <div className="mt-6 flex justify-end">
+            {data && data.usuario && data.usuario.numTarjeta ? (
+              <button
+                onClick={() => setModalIsOpen(false)}
+                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+              >
+                Cerrar
+              </button>
+            ) : (
+              <button
+                onClick={() => setModalIsOpen(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+              >
+                Cerrar
+              </button>
+            )}
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 };

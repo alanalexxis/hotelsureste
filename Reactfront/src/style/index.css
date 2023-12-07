@@ -86,7 +86,7 @@ input:checked.defaultCheckbox::before {
 .front-card {
   position: absolute;
   top: 180px;
-  background: url("../views/admin/tarjeta/components/images/bg-card-front.png") no-repeat center/cover;
+  background: url("../views/usuario/tarjeta/components/images/bg-card-front.png") no-repeat center/cover;
   height: 230px;
   width: 320px;
   border-radius: 10px;
@@ -96,10 +96,11 @@ input:checked.defaultCheckbox::before {
 .back-card {
   position: absolute;
   right: 20px;
-  background: url("../views/admin/tarjeta/components/images/bg-card-back.png") no-repeat center/cover;
+  background: url("../views/usuario/tarjeta/components/images/bg-card-back.png") no-repeat center/cover;
   height: 230px;
   width: 320px;
   border-radius: 10px;
+  z-index: 19;
 }
 
 
@@ -120,16 +121,18 @@ form input {
   @apply border-2 border-navy-300 py-3 px-4 rounded outline-none w-full;
 }
 
+
 .btnn {
   background-color: hsl(278, 68%, 11%);
   @apply py-3 px-6 rounded shadow text-white text-base tracking-wide lg:text-lg;
 }
 
+
 @media (min-width: 768px) {
   .front-card,
   .back-card {
-    height: 300px;
-    width: 500px;
+    height: 270px;
+    width: 470px;
     border-radius: 20px;
   }
 
@@ -154,15 +157,18 @@ form input {
   }
 
   .back-card {
-    top: -30px;
-    right: 60px;
+    top: -60px;
+    right: 75px;
   }
 
   form,
   .thank-you {
     margin-top: 0;
   }
+
+  
 }
+
 
 /* Estilo para el modal */
 .Modal {

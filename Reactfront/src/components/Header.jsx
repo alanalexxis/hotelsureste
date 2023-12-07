@@ -106,28 +106,39 @@ const Header = () => {
 
               <div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
 
-              <div className="mt-3 ml-4 flex flex-col">
-                <Link
-                  to="/admin/profile/"
-                  className="text-sm text-gray-800 dark:text-white hover:dark:text-white"
-                >
-                  Configuración de perfil
-                </Link>
-                <a
-                  href=" "
-                  className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white"
-                >
-                  Newsletter Settings
-                </a>
+              {data && data.usuario ? (
+                <div className="mt-3 ml-4 flex flex-col">
+                  <Link
+                    to="/admin/profile/"
+                    className="text-sm text-gray-800 dark:text-white hover:dark:text-white"
+                  >
+                    Configuración de perfil
+                  </Link>
+                  <Link
+                    to="/usuario/reservas/"
+                    className="mt-3 text-sm  text-gray-800 dark:text-white hover:dark:text-white"
+                  >
+                    Mis reservas
+                  </Link>
 
-                <Link
-                  to="/auth/sign-in/"
-                  className="mt-3 text-sm font-medium text-red-500 hover:text-red-500"
-                  onClick={handleLogout}
-                >
-                  Cerrar sesión
-                </Link>
-              </div>
+                  <Link
+                    to="/auth/sign-in/"
+                    className="mt-3 text-sm font-medium text-red-500 hover:text-red-500"
+                    onClick={handleLogout}
+                  >
+                    Cerrar sesión
+                  </Link>
+                </div>
+              ) : (
+                <div className="mt-3 ml-4 flex flex-col">
+                  <Link
+                    to="/auth/sign-in/"
+                    className="mt-3 text-sm font-medium text-red-500 hover:text-red-500"
+                  >
+                    Iniciar sesión
+                  </Link>
+                </div>
+              )}
             </div>
           }
           classNames={"py-2 top-8 -left-[180px] w-max"}

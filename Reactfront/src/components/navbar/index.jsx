@@ -118,8 +118,8 @@ const Navbar = (props) => {
                     Nota:
                   </p>
                   <p className="font-base text-left text-xs text-green-900 dark:text-white">
-                    Los permisos podrán solicitarse como máximo 3 días hábiles
-                    después de la inasistencia
+                    Las reservaciones podrán cancelarse hasta 48 horas antes de
+                    la fecha de inicio de su estancia.
                   </p>
                 </div>
               </button>
@@ -133,8 +133,8 @@ const Navbar = (props) => {
                     Recuerda:
                   </p>
                   <p className="font-base text-left text-xs text-green-900 dark:text-white">
-                    Durante periodos de evaluación los permisos no podrán ser
-                    aprobados, evita perder tus permisos!
+                    Después del periodo de 48 horas se le cobrará un día de
+                    alojamiento.
                   </p>
                 </div>
               </button>
@@ -159,19 +159,19 @@ const Navbar = (props) => {
                 }}
                 className="mb-2 aspect-video w-full rounded-lg"
               />
-              <a
-                target="blank"
+
+              <Link
+                to="/"
                 className="px-full linear flex cursor-pointer items-center justify-center rounded-xl bg-green-500 py-[11px] font-bold text-white transition duration-200 hover:bg-green-600 hover:text-white active:bg-green-700 dark:bg-green-400 dark:hover:bg-green-300 dark:active:bg-green-200"
               >
-                Descarga nuestra app móvil
-              </a>
-              <a
-                target="blank"
-                href=""
+                Menú principal
+              </Link>
+              <Link
+                to="/admin/aviso"
                 className="px-full linear flex cursor-pointer items-center justify-center rounded-xl border py-[11px] font-bold text-navy-700 transition duration-200 hover:bg-gray-200 hover:text-navy-700 dark:!border-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:active:bg-white/10"
               >
-                Ver documentación
-              </a>
+                Aviso de privacidad
+              </Link>
               <a
                 target="blank"
                 href=""
@@ -245,12 +245,12 @@ const Navbar = (props) => {
                 >
                   Configuración de perfil
                 </Link>
-                <a
-                  href=" "
-                  className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white"
+                <Link
+                  to="/usuario/reservas/"
+                  className="mt-3 text-sm  text-gray-800 dark:text-white hover:dark:text-white"
                 >
-                  Newsletter Settings
-                </a>
+                  Mis reservas
+                </Link>
 
                 <Link
                   to="/auth/sign-in/"

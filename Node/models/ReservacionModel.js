@@ -13,6 +13,7 @@ const reservacionModel = db.define("reservacion", {
   },
   fecInic: { type: DataTypes.DATE },
   fecFin: { type: DataTypes.DATE },
+  total: { type: DataTypes.FLOAT },
 });
 
 reservacionModel.belongsTo(habitacionModel, {

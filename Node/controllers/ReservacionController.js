@@ -16,9 +16,12 @@ export const getAllReservacions = async (req, res) => {
       reservacions.map((reservacion) => ({
         idreservacions: reservacion.idreservacions,
         nombreUsuario: reservacion.usuario.nombre,
+        idusuarios: reservacion.idusuarios,
+        idstatus: reservacion.idstatuses,
         codHab: reservacion.habitacion.codHab,
         nombreHabitacion: reservacion.habitacion.nombre,
         costoHabitacion: reservacion.habitacion.costo,
+        total: reservacion.total,
         numPersonas: reservacion.habitacion.numPersonas,
         fecInic: reservacion.fecInic,
         fecFin: reservacion.fecFin,

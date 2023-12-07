@@ -1,9 +1,10 @@
 import InputField from "../../components/fields/InputField";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import Checkbox from "../../components/checkbox";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function SignIn() {
   const [correo, setCorreo] = useState("");
@@ -11,6 +12,9 @@ export default function SignIn() {
   const [contrasena, setContrasena] = useState("");
   const [idrangos, setIdrangos] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [showRecaptcha, setShowRecaptcha] = useState(false);
+  const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false);
 
   const handleRememberMe = () => {
     setRememberMe(!rememberMe);
@@ -33,7 +37,7 @@ export default function SignIn() {
   const [body, setBody] = useState({ correo: "", contrasena: "" });
   const [error, setError] = useState(null); // nuevo estado para almacenar el mensaje de error
   const navigate = useNavigate();
-
+  const recaptchaRef = useRef(null);
   const inputChange = ({ target }) => {
     const { name, value } = target;
     setBody({
@@ -67,19 +71,30 @@ export default function SignIn() {
         if (rememberMe) {
           localStorage.setItem("rememberMe", "true");
         } else {
-          localStorage.removeItem("rememberMe");
+          localStorage.setItem("rememberMe", "true");
         }
 
         // Verificar el valor de idrangos
         if (data.usuario.idrangos === 1) {
           navigate("/admin/default"); // Redireccionar a /admin si idrangos = 1
         } else if (data.usuario.idrangos === 2) {
-          navigate("/admin/default"); // Redireccionar a /usuario/ si idrangos = 2
+          navigate("/usuario/reservas"); // Redireccionar a /usuario/ si idrangos = 2
         }
       })
       .catch(({ response }) => {
         console.log(response.data);
         setError(response.data); // establecer el mensaje de error en el estado
+        // Increment failed attempts
+        setFailedAttempts((prevAttempts) => prevAttempts + 1);
+
+        // If failed attempts reach the threshold (e.g., 3), show reCAPTCHA
+        if (failedAttempts + 1 >= 3) {
+          setShowRecaptcha(true);
+          setIsLoginButtonDisabled(true);
+          if (recaptchaRef.current) {
+            recaptchaRef.current.reset();
+          }
+        }
       });
 
     // Agregar un listener de eventos para el evento beforeunload
@@ -87,8 +102,6 @@ export default function SignIn() {
       // Verificar si la opción "Recuérdame" no está seleccionada
       if (!rememberMe) {
         // Borrar los datos del localStorage bajo la clave "legedin"
-        localStorage.removeItem("legedin");
-        localStorage.removeItem("auth");
       }
     });
   };
@@ -103,6 +116,8 @@ export default function SignIn() {
     // Validamos el formato del correo y la longitud de la contraseña
     if (!nombre) {
       setError("Por favor, introduzca un nombre.");
+    } else if (!/^[A-Za-z\sñÑ]+$/.test(nombre)) {
+      setError("Por favor, introduzca un nombre válido.");
     } else if (!correo.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
       setError("El formato del correo es incorrecto.");
     } else if (contrasena.length < 8) {
@@ -114,7 +129,7 @@ export default function SignIn() {
           correo: correo,
           nombre: nombre,
           contrasena: hashedPassword, // Envía la contraseña cifrada
-          idrangos: 1,
+          idrangos: 2,
         })
         .then((response) => {
           setRegistroExitoso(true);
@@ -133,6 +148,20 @@ export default function SignIn() {
     }
   };
   const [registroExitoso, setRegistroExitoso] = useState(false);
+  const handleRecaptchaChange = (value) => {
+    console.log("reCAPTCHA value:", value);
+    // Store the reCAPTCHA value in your component's state or perform any necessary actions
+
+    // Enable the login button when reCAPTCHA is completed
+    setIsLoginButtonDisabled(false);
+  };
+
+  const handleNombreChange = (e) => {
+    const inputValue = e.target.value;
+    // Limitar a 200 caracteres
+    const limitedValue = inputValue.substring(0, 45);
+    setNombre(limitedValue);
+  };
 
   return (
     <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
@@ -173,8 +202,9 @@ export default function SignIn() {
               id="name"
               type="text"
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              onChange={handleNombreChange}
               name="nombre"
+              pattern="[A-Za-z]+"
             />
           </div>
         )}
@@ -186,7 +216,7 @@ export default function SignIn() {
           label="Correo"
           placeholder="example@mail.com"
           id="email"
-          type="text"
+          type="email"
           value={showRegistration ? correo : body.correo} // Cambia el value según showRegistration
           onChange={(e) => {
             // Usa una sola función de manejo para ambos casos
@@ -236,6 +266,7 @@ export default function SignIn() {
           </button>
         </div>
         <button
+          disabled={isLoginButtonDisabled}
           id="submit-button"
           onClick={() => {
             if (showRegistration) {
@@ -244,10 +275,23 @@ export default function SignIn() {
               onSubmit(); // Ejecutar la función "onSubmit" si estás iniciando sesión
             }
           }}
-          className="linear mt-2 w-full rounded-xl bg-green-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-green-600 active:bg-green-700 dark:bg-green-400 dark:text-white dark:hover:bg-green-300 dark:active:bg-green-200"
+          className={`linear mt-2 w-full rounded-xl py-[12px] text-base font-medium transition duration-200
+    ${
+      isLoginButtonDisabled
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-green-500 hover:bg-green-600 active:bg-green-700"
+    }
+    text-white dark:bg-green-400 dark:text-white dark:hover:bg-green-300 dark:active:bg-green-200`}
         >
           {showRegistration ? "Registrarse" : "Iniciar sesión"}
         </button>
+        {showRecaptcha && (
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey="6LdLvSgpAAAAACSCaLdvj-t_sNnOsGF4wiGASruD"
+            onChange={handleRecaptchaChange}
+          />
+        )}
       </div>
     </div>
   );

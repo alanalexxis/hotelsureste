@@ -3,14 +3,35 @@ import Links from "./components/Links";
 import routes from "../../routes";
 
 const Sidebar = ({ open, onClose }) => {
-  // Eliminar la ruta "Editar usuarios" de la lista de rutas
-  const sidebarRoutes = routes.filter(
-    (route) =>
-      route.name !== "Editar usuarios" &&
-      route.name !== "Añadir usuarios" &&
-      route.name !== "Aviso de privacidad" &&
-      route.name !== "Editar info"
-  );
+  const data = JSON.parse(localStorage.getItem("legedin"));
+  const Userdata = data ? data.usuario : null;
+  // Declare sidebarRoutes with an initial value
+  let sidebarRoutes = [];
+
+  // Validación de data y data.usuario
+  if (data && data.usuario) {
+    // Eliminar la ruta "Editar usuarios" de la lista de rutas
+    sidebarRoutes = routes.filter(
+      (route) =>
+        route.name !== "Editar usuarios" &&
+        route.name !== "Añadir usuarios" &&
+        route.name !== "Aviso de privacidad" &&
+        route.name !== "Editar info" &&
+        !(Userdata.idrangos === 2 && route.name === "Mis mensajes") &&
+        !(Userdata.idrangos === 2 && route.name === "Usuarios") &&
+        !(Userdata.idrangos === 2 && route.name === "Ver reservas") &&
+        !(Userdata.idrangos === 1 && route.name === "Mis reservas") &&
+        !(Userdata.idrangos === 1 && route.name === "Métodos de pago") &&
+        !(Userdata.idrangos === 2 && route.name === "Menú principal")
+    );
+
+    // Resto de tu lógica utilizando sidebarRoutes
+  } else {
+    // Manejar el caso cuando data o data.usuario no existen
+    // Puedes devolver un mensaje de error, redireccionar, etc.
+    // Por ejemplo, puedes devolver un array vacío para sidebarRoutes:
+    sidebarRoutes = [];
+  }
 
   return (
     <div

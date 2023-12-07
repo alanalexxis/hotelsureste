@@ -73,7 +73,7 @@ export const roomData = [
     ],
     size: 25,
     maxPerson: 1,
-    price: 265,
+    price: 700,
     image: images.Room3Img,
     imageLg: images.Room3ImgLg,
   },

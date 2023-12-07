@@ -2,7 +2,7 @@ import React from "react";
 import MainDashboard from "./views/admin/default";
 import Profile from "./views/admin/profile";
 import DataTables from "./views/admin/usuario";
-import TablaTarjeta from "./views/admin/tarjeta";
+import TablaTarjeta from "./views/usuario/tarjeta";
 import { TbDoorEnter, TbDoorExit } from "react-icons/tb";
 
 // Auth Imports
@@ -24,7 +24,7 @@ import CompEditUsuario from "./views/admin/usuario/components/usuario/EditUsuari
 import CompCreateUsuario from "./views/admin/usuario/components/usuario/CreateUsuario";
 import TablaContactos from "./views/admin/contacto/index2";
 import TablaReservacion from "./views/admin/reservacion/index";
-
+import TablaReservacion2 from "./views/usuario/reservacion/index";
 const routes = [
   {
     name: "Menú principal",
@@ -41,15 +41,19 @@ const routes = [
     layout: "/admin",
     icon: <MdSupervisedUserCircle className="h-6 w-6" />,
     path: "usuarios",
-    component: <DataTables />,
+    component: (
+      <RouteController isAuthenticated={true} component={DataTables} />
+    ),
   },
 
   {
     name: "Métodos de pago",
-    layout: "/admin",
+    layout: "/usuario",
     icon: <FaCreditCard className="h-6 w-6" />,
     path: "tarjeta",
-    component: <TablaTarjeta />,
+    component: (
+      <RouteController isAuthenticated={true} component={TablaTarjeta} />
+    ),
   },
   {
     name: "Aviso de privacidad",
@@ -64,7 +68,9 @@ const routes = [
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "data-tables/edit/:idusuarios",
-    component: <CompEditUsuario />,
+    component: (
+      <RouteController isAuthenticated={true} component={CompEditUsuario} />
+    ),
   },
 
   {
@@ -72,7 +78,9 @@ const routes = [
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "data-tables/create",
-    component: <CompCreateUsuario />,
+    component: (
+      <RouteController isAuthenticated={true} component={CompCreateUsuario} />
+    ),
   },
 
   {
@@ -80,30 +88,36 @@ const routes = [
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "mensajes",
-    component: <TablaContactos />,
+    component: (
+      <RouteController isAuthenticated={true} component={TablaContactos} />
+    ),
   },
+
   {
-    name: "Mis reservas",
+    name: "Ver reservas",
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "reservas",
-    component: <TablaReservacion />,
+    component: (
+      <RouteController isAuthenticated={true} component={TablaReservacion} />
+    ),
   },
-
-  // {
-  //   name: "Añadir grupos",
-  //   layout: "/admin",
-  //   icon: <MdBarChart className="h-6 w-6" />,
-  //   path: "grupo/create",
-  //   component: <CompCreateGrupo />,
-  // },
-
+  {
+    name: "Mis reservas",
+    layout: "/usuario",
+    icon: <MdBarChart className="h-6 w-6" />,
+    path: "reservas",
+    component: (
+      <RouteController isAuthenticated={true} component={TablaReservacion2} />
+    ),
+  },
   {
     name: "Perfil",
     layout: "/admin",
     path: "profile",
     icon: <MdPerson className="h-6 w-6" />,
-    component: <Profile />,
+
+    component: <RouteController isAuthenticated={true} component={Profile} />,
   },
   {
     name: "Cerrar sesión",

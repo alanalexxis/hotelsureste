@@ -65,11 +65,42 @@ const CreditCardForm = (props) => {
       cvc: encryptedCVC,
       fecVen: encryptedDate,
     });
+    // Obtén el valor actual de "legedin" del localStorage
+    const data = JSON.parse(localStorage.getItem("legedin"));
+
+    // Verifica que data y data.usuario existan
+    if (data && data.usuario) {
+      // Modifica el valor de numTarjeta
+      data.usuario.numTarjeta = "aceptado";
+
+      // Actualiza el localStorage con la nueva información
+      localStorage.setItem("legedin", JSON.stringify(data));
+
+      // Puedes hacer más acciones aquí si es necesario
+    } else {
+      // Maneja el caso cuando data o data.usuario no existen
+      console.error(
+        "No se encontró el objeto 'legedin' en el localStorage o no tiene la estructura esperada."
+      );
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Evita la presentación del formulario por defecto
     handleConfirmation(); // Llama a handleConfirmation al enviar el formulario
+  };
+  const maskCreditCardNumber = (number) => {
+    const visibleDigits = number.slice(-4); // Get the last 4 digits (visible)
+    const maskedDigits = "*".repeat(Math.max(0, number.length - 4)); // Mask the rest with asterisks
+    return `${maskedDigits}${visibleDigits}`;
+  };
+
+  const handleCardNumberChange = (e) => {
+    // Update the cardNumber state as the user types
+    setCardNumber(e.target.value);
+  };
+  const maskCvc = (cvc) => {
+    return "***"; // Mask the entire cvc with asterisks
   };
 
   return (
@@ -84,7 +115,7 @@ const CreditCardForm = (props) => {
 
               <div>
                 <h2 className="mb-6 text-xl tracking-widest text-white lg:text-3xl">
-                  {cardNumber}
+                  {maskCreditCardNumber(cardNumber)}
                 </h2>
 
                 <ul className="flex items-center justify-between">
@@ -101,9 +132,9 @@ const CreditCardForm = (props) => {
             <article className="back-card relative lg:ml-20">
               <p
                 className="absolute right-10 text-lg tracking-widest text-white lg:text-xl"
-                style={{ top: "105px" }}
+                style={{ top: "115px" }}
               >
-                {cvc}
+                {maskCvc(cvc)}
               </p>
             </article>
           </div>
@@ -140,7 +171,7 @@ const CreditCardForm = (props) => {
                         .replace(/\s/g, "")
                         .replace(/(\d{4})/g, "$1 ")
                         .trim()}
-                      onChange={(e) => setCardNumber(e.target.value)}
+                      onChange={handleCardNumberChange}
                     />
                   </div>
 
@@ -195,7 +226,7 @@ const CreditCardForm = (props) => {
                       setDate("01/23");
                       setCvc("");
                     }}
-                    className="btn mx-auto mt-10 block w-full"
+                    className="btnn mx-auto mt-10 block w-full"
                   >
                     Continuar
                   </button>
